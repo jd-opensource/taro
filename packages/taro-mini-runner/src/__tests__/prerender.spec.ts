@@ -84,29 +84,29 @@ describe('prerender', () => {
     expect(output).toMatchSnapshot()
   })
 
-  // test('should transform result xml', async () => {
-  //   const { stats, config } = await compile('prerender', {
-  //     fileType,
-  //     prerender: {
-  //       match: 'others/**',
-  //       include: ['pages/index/index'],
-  //       exclude: ['others/normal/index'],
-  //       transformXML (data, { path }, xml) {
-  //         if (path === 'others/detail/index') {
-  //           return '<video src="https://github.com/taro" />'
-  //         }
+  test('should transform result xml', async () => {
+    const { stats, config } = await compile('prerender', {
+      fileType,
+      prerender: {
+        match: 'others/**',
+        include: ['pages/index/index'],
+        exclude: ['others/normal/index'],
+        transformXML (data, { path }, xml) {
+          if (path === 'others/detail/index') {
+            return '<video src="https://github.com/taro" />'
+          }
 
-  //         return xml
-  //       }
-  //     }
-  //   })
-  //   const assets = stats.toJson().assets || []
+          return xml
+        }
+      }
+    })
+    const assets = stats.toJson().assets || []
 
-  //   expect(assets.length).toMatchSnapshot()
+    expect(assets.length).toMatchSnapshot()
 
-  //   const output = getOutput(stats, { ...config, fs })
-  //   expect(output).toMatchSnapshot()
-  // })
+    const output = getOutput(stats, { ...config, fs })
+    expect(output).toMatchSnapshot()
+  })
 
   test('should throw error', async () => {
     const originLogError = console.error
