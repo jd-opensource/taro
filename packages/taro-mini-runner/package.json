@@ -12,7 +12,7 @@
     "lint": "tslint src/**/*.ts --fix",
     "lint:typecheck": "tslint -p tsconfig.json src/**/*.ts --fix",
     "test": "cross-env NODE_ENV=jest jest",
-    "test:ci": "cross-env NODE_ENV=jest jest -i",
+    "test:ci": "cross-env NODE_ENV=jest jest -i --max-old-space-size=8192",
     "test:dev": "cross-env NODE_ENV=jest jest --watch",
     "test:coverage": "cross-env NODE_ENV=jest jest --coverage",
     "updateSnapshot": "cross-env NODE_ENV=jest jest --updateSnapshot"
