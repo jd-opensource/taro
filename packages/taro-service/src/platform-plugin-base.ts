@@ -1,4 +1,5 @@
 import type { RecursiveTemplate, UnRecursiveTemplate } from '@tarojs/shared/dist/template'
+import { RunnerType } from '@tarojs/taro/types/compile'
 import type { IPluginContext } from '../types/index'
 
 interface IFileType {
@@ -111,8 +112,9 @@ ${exampleCommand}
    */
   protected async getRunner () {
     const { appPath } = this.ctx.paths
+    const runnerType = this.ctx.initialConfig.runner || RunnerType.Webpack
     const { npm } = this.helper
-    const runner = await npm.getNpmPkg('@tarojs/mini-runner', appPath)
+    const runner = await npm.getNpmPkg(`@tarojs/${runnerType}-runner`, appPath)
     return runner.bind(null, appPath)
   }
 

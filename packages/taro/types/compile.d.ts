@@ -357,6 +357,11 @@ export interface IManifestConfig extends ITaroManifestConfig {
 
 export type PluginItem = string | [string, object]
 
+export const enum RunnerType {
+  Webpack = 'webpack',
+  Vite = 'vite'
+}
+
 export interface IProjectBaseConfig {
   projectName?: string
   date?: string
@@ -377,6 +382,7 @@ export interface IProjectBaseConfig {
   presets?: PluginItem[]
   baseLevel?: number
   framework?: string
+  runner?: RunnerType
 }
 
 export interface IProjectConfig extends IProjectBaseConfig {

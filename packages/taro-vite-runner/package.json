@@ -1,0 +1,54 @@
+{
+  "name": "@tarojs/vite-runner",
+  "version": "3.4.3",
+  "description": "vite runner for taro",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "test": "cross-env NODE_ENV=jest jest",
+    "test:ci": "cross-env NODE_ENV=jest jest -i",
+    "test:dev": "cross-env NODE_ENV=jest jest --watch",
+    "test:coverage": "cross-env NODE_ENV=jest jest --coverage",
+    "updateSnapshot": "cross-env NODE_ENV=jest jest --updateSnapshot"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NervJS/taro.git"
+  },
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "keywords": [
+    "taro"
+  ],
+  "author": "luckyadam",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NervJS/taro/issues"
+  },
+  "homepage": "https://github.com/NervJS/taro#readme",
+  "dependencies": {
+    "@babel/core": "7.17.8",
+    "@babel/generator": "7.17.7",
+    "@babel/traverse": "7.17.3",
+    "@babel/types": "7.17.0",
+    "@rollup/plugin-inject": "4.0.4",
+    "@tarojs/helper": "3.4.3",
+    "@tarojs/runner-utils": "3.4.3",
+    "@tarojs/taro": "3.4.3",
+    "@vitejs/plugin-react": "1.2.0",
+    "autoprefixer": "10.4.4",
+    "estree-walker": "2.0.2",
+    "html-minifier": "4.0.0",
+    "lodash": "4.17.21",
+    "postcss-pxtransform": "3.4.4",
+    "postcss-html-transform": "3.4.4",
+    "postcss-url": "10.1.3",
+    "resolve": "1.22.0",
+    "rollup-plugin-visualizer": "5.6.0",
+    "rollup-pluginutils": "2.8.2",
+    "vite": "2.8.6"
+  }
+}

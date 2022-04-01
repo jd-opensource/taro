@@ -88,6 +88,15 @@ export default (ctx: IPluginContext) => {
             mode: isProduction ? 'production' : 'development',
             blended,
             isBuildNativeComp,
+            async modifyBuildConfig (buildConfig) {
+              await ctx.applyPlugins({
+                name: hooks.MODIFY_BUILD_CONFIG,
+                initialVal: buildConfig,
+                opts: {
+                  buildConfig
+                }
+              })
+            },
             async modifyWebpackChain (chain, webpack, data) {
               await ctx.applyPlugins({
                 name: hooks.MODIFY_WEBPACK_CHAIN,
@@ -164,6 +173,7 @@ export default (ctx: IPluginContext) => {
 
 function registerBuildHooks (ctx) {
   [
+    hooks.MODIFY_BUILD_CONFIG,
     hooks.MODIFY_WEBPACK_CHAIN,
     hooks.MODIFY_BUILD_ASSETS,
     hooks.MODIFY_MINI_CONFIGS,

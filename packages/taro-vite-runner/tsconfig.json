@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.root.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist",
+    "rootDir": "./src",
+    "module": "commonjs",
+    "sourceMap": true,
+    "preserveConstEnums": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "./src"
+  ],
+  "exclude": [
+    "./src/__tests__"
+  ]
+}
