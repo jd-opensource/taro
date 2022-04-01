@@ -109,7 +109,7 @@ export default (appPath: string, config) => {
       })
     },
     generateBundle () {
-      const pagesInfo = getPagesInfo(sourceDir)
+      const pagesInfo = getPagesInfo(sourceDir, fileType.templ)
       if (!template.isSupportRecursive) {
         // 如微信、QQ 不支持递归模版的小程序，需要使用自定义组件协助递归
         generateTemplateFile(this.emitFile, compNamePath, template.buildBaseComponentTemplate, fileType.templ)
@@ -144,12 +144,14 @@ export default (appPath: string, config) => {
         if (config) {
           const importBaseCompPath = promoteRelativePath(path.relative(page.path, path.join(sourceDir, getTargetFilePath(compNamePath, ''))))
           const importCustomWrapperPath = promoteRelativePath(path.relative(page.path, path.join(sourceDir, getTargetFilePath(customWrapperNamePath, ''))))
-          config.usingComponents = {
-            [customWrapperName]: importCustomWrapperPath,
-            ...config.usingComponents
-          }
-          if (!template.isSupportRecursive && !page.isNative) {
-            config.usingComponents[compName] = importBaseCompPath
+          if (!page.isNative) {
+            config.usingComponents = {
+              [customWrapperName]: importCustomWrapperPath,
+              ...config.usingComponents
+            }
+            if (!template.isSupportRecursive) {
+              config.usingComponents[compName] = importBaseCompPath
+            }
           }
           generateConfigFile(this.emitFile, page.path, config)
         }

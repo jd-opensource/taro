@@ -1,4 +1,5 @@
 import * as path from 'path'
+import * as fs from 'fs'
 
 import { recursiveMerge, resolveMainFilePath } from '@tarojs/helper'
 import { partial } from 'lodash'
@@ -54,4 +55,8 @@ export const processEnvOption = partial(mapKeys as any, (key: string) => `proces
 
 export const mergeOption = ([...options]: IOption[]): IOption => {
   return recursiveMerge({}, ...options)
+}
+
+export function isNativePageORComponent (templatePath: string): boolean {
+  return fs.existsSync(templatePath)
 }

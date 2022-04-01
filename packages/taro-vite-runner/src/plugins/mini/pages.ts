@@ -1,21 +1,39 @@
 import * as path from 'path'
+import * as fs from 'fs'
 
 import type { Plugin } from 'vite'
 import { promoteRelativePath } from '@tarojs/helper'
 
 import { VITE_PLUGIN_NAME_PAGES } from '../../utils/constants'
-import { getPageFromConfigPath, isPageConfig } from '../../utils/project'
+import { getPageFromConfigPath, getPageFromPath, isPage, isPageConfig } from '../../utils/project'
+import { getTargetFilePath } from '../../utils'
 
 export default (_: string, config) => {
   const {
     loaderMeta,
-    hot
+    hot,
+    fileType = {
+      templ: '.wxml',
+      style: '.wxss',
+      config: '.json',
+      script: '.js',
+      xs: '.wxs'
+    }
   } = config
   const { modifyInstantiate } = loaderMeta
   return {
     name: VITE_PLUGIN_NAME_PAGES,
     enforce: 'post',
-    async transform (_, id) {
+    resolveId (id) {
+      if (isPageConfig(id)) {
+        const page = getPageFromConfigPath(id)!
+        if (!page.isNative) {
+          return id
+        }
+        return page.path
+      }
+    },
+    load (id) {
       if (isPageConfig(id)) {
         const page = getPageFromConfigPath(id)!
         const pagePath = page.path
@@ -46,6 +64,26 @@ export default (_: string, config) => {
           ${instantiatePage}
           ${hmr}
           `
+        }
+      } else if (isPage(id)) {
+        const page = getPageFromPath(id)!
+        const pageTemplatePath = page.templ
+        const pageStylePath = getTargetFilePath(page.path, fileType.style)
+        if (pageTemplatePath) {
+          this.emitFile({
+            type: 'asset',
+            fileName: page.name + fileType.templ,
+            source: fs.readFileSync(pageTemplatePath).toString()
+          })
+          if (fs.existsSync(pageStylePath)) {
+            const code = fs.readFileSync(page.path).toString()
+            return {
+              code: `
+              import '${pageStylePath}';
+              ${code}
+              `
+            }
+          }
         }
       }
     }

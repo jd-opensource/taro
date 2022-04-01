@@ -19,7 +19,14 @@ export default (appPath: string, config) => {
     loaderMeta,
     designWidth,
     deviceRatio,
-    blended
+    blended,
+    fileType = {
+      templ: '.wxml',
+      style: '.wxss',
+      config: '.json',
+      script: '.js',
+      xs: '.wxs'
+    }
   } = config
   const { importFrameworkStatement, frameworkArgs, creator, creatorLocation, modifyInstantiate } = loaderMeta
   const pxTransformConfig = {
@@ -33,7 +40,7 @@ export default (appPath: string, config) => {
   return {
     name: VITE_PLUGIN_NAME_ENTRY,
     enforce: 'pre',
-    transform (_, id) {
+    load (id) {
       if (id === appConfigPath) {
         const appConfig = readConfig(appConfigPath) as AppConfig
         const appConfigRelativePath = promoteRelativePath(path.relative(appConfigPath, appEntry))
@@ -57,7 +64,7 @@ export default (appPath: string, config) => {
           instantiateApp = modifyInstantiate(instantiateApp, 'app')
         }
         // dynamic import pages
-        const pagesInfo = getPagesInfo(sourceDir)
+        const pagesInfo = getPagesInfo(sourceDir, fileType.templ)
         const pageImports = pagesInfo.map(item => {
           return `import('${item.configPath}')`
         })

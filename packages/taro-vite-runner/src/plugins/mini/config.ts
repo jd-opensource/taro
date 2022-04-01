@@ -27,7 +27,14 @@ export default (appPath: string, config) => {
     isBuildQuickapp = false,
     designWidth,
     deviceRatio,
-    postcss = {}
+    postcss = {},
+    fileType = {
+      templ: '.wxml',
+      style: '.wxss',
+      config: '.json',
+      script: '.js',
+      xs: '.wxs'
+    }
   } = config
   const sourceDir = path.join(appPath, sourceRoot)
   const appEntry = getAppEntry(config.entry)
@@ -97,9 +104,9 @@ export default (appPath: string, config) => {
               format: 'cjs',
               assetFileNames: '[name][extname]',
               chunkFileNames (chunkInfo) {
-                const pagesInfo = getPagesInfo(sourceDir)
+                const pagesInfo = getPagesInfo(sourceDir, fileType.templ)
                 for (const item of pagesInfo) {
-                  if (item.configPath === chunkInfo.facadeModuleId) {
+                  if (item.configPath === chunkInfo.facadeModuleId || item.path === chunkInfo.facadeModuleId) {
                     return `${item.name}.js`
                   }
                 }

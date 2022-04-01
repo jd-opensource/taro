@@ -18,11 +18,12 @@ export default (_: string, config) => {
       xs: '.wxs'
     }
   } = config
-  const filter = createFilter(/\.scss$/i, [])
+  const scssfilter = createFilter(/\.scss$/i, [])
+  const nativeStyleFilter = createFilter(new RegExp(`${fileType.style}$`), [])
   return {
     name: VITE_PLUGIN_NAME_STYLE,
     transform (code: string, id: string) {
-      if (!filter(id)) return null
+      if (!scssfilter(id) && !nativeStyleFilter(id)) return null
       cssCodeMap.set(id, {
         code
       })
