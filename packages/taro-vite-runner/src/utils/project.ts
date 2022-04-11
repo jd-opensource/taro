@@ -25,7 +25,7 @@ export function setAppConfig (config: AppConfig) {
   appConfig = config
 }
 
-export function getPagesInfo (sourceDir: string, templType): IFileInfo[] {
+export function getPagesInfo (sourceDir: string, templType?): IFileInfo[] {
   if (pagesInfo) return pagesInfo
   const { pages } = getAppConfig()
   if (!pages || !pages.length) return []
@@ -78,6 +78,15 @@ export function getPageFromConfigPath (id): IFileInfo | null {
 export function getPageFromPath (id): IFileInfo | null {
   for (const item of pagesInfo) {
     if (item.path === id) {
+      return item
+    }
+  }
+  return null
+}
+
+export function getPageFromName (name): IFileInfo | null {
+  for (const item of pagesInfo) {
+    if (item.name === name) {
       return item
     }
   }

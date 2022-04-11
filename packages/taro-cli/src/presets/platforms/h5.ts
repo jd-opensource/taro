@@ -13,13 +13,14 @@ export default (ctx: IPluginContext) => {
       const { port } = ctx.runOpts
       const { emptyDirectory, recursiveMerge, npm, ENTRY, SOURCE_DIR, OUTPUT_DIR } = ctx.helper
       emptyDirectory(outputPath)
-      const entryFileName = `${ENTRY}.config`
+      const entryFileName = `${ENTRY}`
       const entryFile = path.basename(entryFileName)
       const defaultEntry = {
         [ENTRY]: [path.join(sourcePath, entryFile)]
       }
       const customEntry = get(initialConfig, 'h5.entry')
       const h5RunnerOpts = recursiveMerge(Object.assign({}, config), {
+        compiler: initialConfig.runner,
         entryFileName: ENTRY,
         env: {
           TARO_ENV: JSON.stringify('h5'),
@@ -31,8 +32,9 @@ export default (ctx: IPluginContext) => {
         outputRoot: config.outputRoot || OUTPUT_DIR
       })
       h5RunnerOpts.entry = merge(defaultEntry, customEntry)
-      const webpackRunner = await npm.getNpmPkg('@tarojs/webpack-runner', appPath)
-      webpackRunner(appPath, h5RunnerOpts)
+      const compiler = h5RunnerOpts.compiler
+      const runner = await npm.getNpmPkg(`@tarojs/${compiler}-runner`, appPath)
+      runner(appPath, h5RunnerOpts)
     }
   })
 }

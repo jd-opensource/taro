@@ -4,12 +4,9 @@ import type { Plugin } from 'vite'
 import type { OutputChunk } from 'rollup'
 import { promoteRelativePath, readConfig } from '@tarojs/helper'
 import { AppConfig } from '@tarojs/taro'
-import * as babel from '@babel/core'
-import traverse from '@babel/traverse'
-import generator from '@babel/generator'
 
-import { DO_NOT_NEED_CODE, OUTPUT_MAIN_CONFIG_NAME, OUTPUT_MAIN_JS_NAME, VITE_PLUGIN_NAME_ENTRY } from '../../utils/constants'
-import { getAppEntry, getConfigFilePath } from '../../utils'
+import { DO_NOT_NEED_CODE, OUTPUT_MAIN_CONFIG_NAME, OUTPUT_MAIN_JS_NAME, VITE_PLUGIN_ENTRY_MINI } from '../../utils/constants'
+import { getAppEntry, getConfigFilePath, removeNoNeedCode } from '../../utils'
 import { getAppConfig, getPagesInfo, setAppConfig } from '../../utils/project'
 
 export default (appPath: string, config) => {
@@ -38,7 +35,7 @@ export default (appPath: string, config) => {
   const appEntry = getAppEntry(config.entry)
   const appConfigPath = getConfigFilePath(appEntry)
   return {
-    name: VITE_PLUGIN_NAME_ENTRY,
+    name: VITE_PLUGIN_ENTRY_MINI,
     enforce: 'pre',
     load (id) {
       if (id === appConfigPath) {
@@ -94,27 +91,9 @@ export default (appPath: string, config) => {
       Object.keys(bundle).forEach(key => {
         if (key === OUTPUT_MAIN_JS_NAME) {
           const bundleItem = bundle[key] as OutputChunk
-          const { code } = bundleItem
-          const ast = babel.parseSync(code, {
-            filename: key,
-            ast: true,
-            code: false
-          })!
-          if (ast) {
-            traverse(ast, {
-              IfStatement (astPath) {
-                const testPath = astPath.get('test')
-                if (testPath && testPath.isIdentifier() && testPath.node.name === DO_NOT_NEED_CODE) {
-                  astPath.remove()
-                }
-              }
-            })
-            const codeGenerate = generator(ast, {
-              jsescOption: {
-                minimal: true
-              }
-            })
-            bundleItem.code = codeGenerate.code
+          const code = removeNoNeedCode(key, bundleItem.code)
+          if (code) {
+            bundleItem.code = code
           }
         }
       })

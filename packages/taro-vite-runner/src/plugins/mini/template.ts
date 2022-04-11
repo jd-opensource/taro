@@ -6,7 +6,7 @@ import { isNodeModule, promoteRelativePath } from '@tarojs/helper'
 import { Config } from '@tarojs/taro'
 import { minify } from 'html-minifier'
 
-import { VITE_PLUGIN_NAME_TEMPLATE } from '../../utils/constants'
+import { VITE_PLUGIN_TEMPLATE_MINI } from '../../utils/constants'
 import { getIsBuildPluginPath, getTargetFilePath } from '../../utils'
 import { componentConfig } from '../../config/template/component'
 import { getPagesInfo } from '../../utils/project'
@@ -94,7 +94,7 @@ export default (appPath: string, config) => {
     (template as UnRecursiveTemplate).baseLevel = baseLevel
   }
   return {
-    name: VITE_PLUGIN_NAME_TEMPLATE,
+    name: VITE_PLUGIN_TEMPLATE_MINI,
     enforce: 'post',
     buildStart () {
       this.emitFile({

@@ -2,7 +2,7 @@ import type { Plugin } from 'vite'
 
 import { createFilter } from 'rollup-pluginutils'
 
-import { VITE_PLUGIN_NAME_STYLE } from '../../utils/constants'
+import { VITE_PLUGIN_STYLE_MINI } from '../../utils/constants'
 import { getTargetFilePath } from '../../utils'
 
 export default (_: string, config) => {
@@ -21,7 +21,7 @@ export default (_: string, config) => {
   const scssfilter = createFilter(/\.scss$/i, [])
   const nativeStyleFilter = createFilter(new RegExp(`${fileType.style}$`), [])
   return {
-    name: VITE_PLUGIN_NAME_STYLE,
+    name: VITE_PLUGIN_STYLE_MINI,
     transform (code: string, id: string) {
       if (!scssfilter(id) && !nativeStyleFilter(id)) return null
       cssCodeMap.set(id, {

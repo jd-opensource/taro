@@ -4,7 +4,7 @@ import * as fs from 'fs'
 import type { Plugin } from 'vite'
 import { promoteRelativePath } from '@tarojs/helper'
 
-import { VITE_PLUGIN_NAME_PAGES } from '../../utils/constants'
+import { VITE_PLUGIN_PAGES_MINI } from '../../utils/constants'
 import { getPageFromConfigPath, getPageFromPath, isPage, isPageConfig } from '../../utils/project'
 import { getTargetFilePath } from '../../utils'
 
@@ -22,7 +22,7 @@ export default (_: string, config) => {
   } = config
   const { modifyInstantiate } = loaderMeta
   return {
-    name: VITE_PLUGIN_NAME_PAGES,
+    name: VITE_PLUGIN_PAGES_MINI,
     enforce: 'post',
     resolveId (id) {
       if (isPageConfig(id)) {

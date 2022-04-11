@@ -97,6 +97,15 @@ export default (ctx: IPluginContext) => {
                 }
               })
             },
+            async modifyViteConfig (viteConfig) {
+              await ctx.applyPlugins({
+                name: hooks.MODIFY_VITE_CONFIG,
+                initialVal: viteConfig,
+                opts: {
+                  viteConfig
+                }
+              })
+            },
             async modifyWebpackChain (chain, webpack, data) {
               await ctx.applyPlugins({
                 name: hooks.MODIFY_WEBPACK_CHAIN,
@@ -175,6 +184,7 @@ function registerBuildHooks (ctx) {
   [
     hooks.MODIFY_BUILD_CONFIG,
     hooks.MODIFY_WEBPACK_CHAIN,
+    hooks.MODIFY_VITE_CONFIG,
     hooks.MODIFY_BUILD_ASSETS,
     hooks.MODIFY_MINI_CONFIGS,
     hooks.MODIFY_COMPONENT_CONFIG,

@@ -12,7 +12,7 @@ import {
   mergeOption,
   processEnvOption
 } from '../../utils'
-import { OUTPUT_MAIN_JS_NAME, VITE_PLUGIN_NAME_MAIN } from '../../utils/constants'
+import { OUTPUT_MAIN_JS_NAME, VITE_PLUGIN_MAIN_MINI } from '../../utils/constants'
 import { getPagesInfo } from '../../utils/project'
 import { getPostcssPlugins } from '../../postcss'
 
@@ -34,7 +34,8 @@ export default (appPath: string, config) => {
       config: '.json',
       script: '.js',
       xs: '.wxs'
-    }
+    },
+    modifyViteConfig
   } = config
   const sourceDir = path.join(appPath, sourceRoot)
   const appEntry = getAppEntry(config.entry)
@@ -46,7 +47,7 @@ export default (appPath: string, config) => {
   const constantsReplaceList = mergeOption([processEnvOption(env), defineConstants, runtimeConstants])
   const postcssOption: IPostcssOption = postcss || {}
   return {
-    name: VITE_PLUGIN_NAME_MAIN,
+    name: VITE_PLUGIN_MAIN_MINI,
     enforce: 'pre',
     config: (_, env) => {
       return {
@@ -129,7 +130,7 @@ export default (appPath: string, config) => {
         } as BuildOptions
       }
     },
-    configResolved (userConfig) {
+    async configResolved (userConfig) {
       const plugins = userConfig.plugins as any[]
       /* @ts-ignore */
       plugins.push(inject({
@@ -142,6 +143,9 @@ export default (appPath: string, config) => {
         SVGElement: ['@tarojs/runtime', 'SVGElement'],
         MutationObserver: ['@tarojs/runtime', 'MutationObserver']
       }))
+      if (typeof modifyViteConfig === 'function') {
+        await modifyViteConfig(userConfig)
+      }
     }
   } as Plugin
 }

@@ -5,6 +5,7 @@ import { modifyMiniWebpackChain } from './webpack.mini'
 import { modifyH5WebpackChain } from './webpack.h5'
 
 import { modifyMiniViteConfig } from './vite.mini'
+import { modifyH5ViteConfig } from './vite.h5'
 
 export type Frameworks = 'react' | 'preact' | 'nerv'
 
@@ -19,6 +20,8 @@ export default (ctx: IPluginContext) => {
       setAliasVite(framework, alias)
       if (process.env.TARO_ENV !== 'h5') {
         modifyMiniViteConfig(ctx, framework, buildConfig)
+      } else {
+        modifyH5ViteConfig(ctx, framework, buildConfig)
       }
     })
   } else if (runner === RunnerType.Webpack) {

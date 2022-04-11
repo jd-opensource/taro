@@ -4,8 +4,12 @@ import * as fs from 'fs'
 import { recursiveMerge, resolveMainFilePath } from '@tarojs/helper'
 import { partial } from 'lodash'
 import { mapKeys } from 'lodash/fp'
+import * as babel from '@babel/core'
+import traverse from '@babel/traverse'
+import generator from '@babel/generator'
 
 import { IOption } from './types'
+import { DO_NOT_NEED_CODE } from './constants'
 
 export function getAppEntry (entry) {
   const app = entry.app
@@ -59,4 +63,29 @@ export const mergeOption = ([...options]: IOption[]): IOption => {
 
 export function isNativePageORComponent (templatePath: string): boolean {
   return fs.existsSync(templatePath)
+}
+
+export function removeNoNeedCode (filename, code): string {
+  const ast = babel.parseSync(code, {
+    filename,
+    ast: true,
+    code: false
+  })!
+  if (ast) {
+    traverse(ast, {
+      IfStatement (astPath) {
+        const testPath = astPath.get('test')
+        if (testPath && testPath.isIdentifier() && testPath.node.name === DO_NOT_NEED_CODE) {
+          astPath.remove()
+        }
+      }
+    })
+    const codeGenerate = generator(ast, {
+      jsescOption: {
+        minimal: true
+      }
+    })
+    return codeGenerate.code
+  }
+  return ''
 }
