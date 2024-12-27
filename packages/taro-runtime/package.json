@@ -1,0 +1,44 @@
+{
+  "name": "@tarojs/runtime",
+  "version": "4.0.9-beta.2",
+  "description": "taro runtime for mini apps.",
+  "author": "O2Team",
+  "license": "MIT",
+  "browser": "dist/index.js",
+  "main:h5": "dist/runtime.esm.js",
+  "main": "dist/runtime.esm.js",
+  "module": "dist/runtime.esm.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [],
+  "scripts": {
+    "prod": "pnpm run build",
+    "prebuild": "pnpm run clean",
+    "build": "pnpm run rollup --environment NODE_ENV:production",
+    "clean": "rimraf ./dist",
+    "dev": "pnpm run rollup --environment NODE_ENV:development -w",
+    "rollup": "rollup --config rollup.config.ts --configPlugin typescript",
+    "test": "jest",
+    "test:ci": "jest --ci -i --coverage --silent"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NervJS/taro/tree/master/packages/taro-runtime"
+  },
+  "engines": {
+    "node": ">= 18"
+  },
+  "dependencies": {
+    "tslib": "^2.6.2",
+    "@tarojs/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.79",
+    "@vue/runtime-core": "^3.4.23",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "rollup-plugin-ts": "^3.4.5"
+  }
+}
